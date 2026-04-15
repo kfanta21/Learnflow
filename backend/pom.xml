@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>com.learnflow</groupId>
+	<artifactId>learnflow</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>learnflow</name>
+	<description>Scalable LMS API — LearnFlow</description>
+
+	<properties>
+		<java.version>21</java.version>
+		<!-- Version numbers defined once here, referenced below with ${} -->
+		<mapstruct.version>1.6.2</mapstruct.version>
+		<hypersistence.version>3.7.3</hypersistence.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- ══════════════════════════════════════════ -->
+		<!--         PHASE 1 — ACTIVE NOW              -->
+		<!-- ══════════════════════════════════════════ -->
+
+		<!-- REST API + embedded Tomcat + Jackson JSON serialization -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Hibernate ORM + Spring Data JPA repositories -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- @NotNull, @Email, @Size on request DTOs -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- /actuator/health for Docker healthchecks and monitoring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL JDBC driver — lets Java talk to PostgreSQL -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Flyway core — runs versioned SQL migration files on startup -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!--
+			Flyway PostgreSQL module — REQUIRED in Flyway 10+
+			Spring Boot 3.3 uses Flyway 10 which split database support
+			into separate modules. Without this, Flyway silently fails.
+		-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
+		<!--
+			hypersistence-utils — maps PostgreSQL JSONB columns to Java objects.
+			Used for Quiz.questions (List<QuizQuestion> stored as JSONB).
+			Without this you'd need custom converters for every JSONB column.
+		-->
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-63</artifactId>
+			<version>${hypersistence.version}</version>
+		</dependency>
+
+		<!--
+			Lombok — eliminates boilerplate at compile time.
+			@Getter, @Setter, @Builder, @NoArgsConstructor, @AllArgsConstructor
+			The 'optional' tag means it won't be included in the final JAR.
+		-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!--
+			MapStruct — compile-time entity to DTO mapping.
+			Generates actual Java code at compile time (not reflection like ModelMapper).
+			Errors are caught at compile time, not at runtime in production.
+		-->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<!--
+			SpringDoc OpenAPI — auto-generates Swagger UI at /swagger-ui.html
+			Reads your @RestController annotations and builds API documentation.
+		-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+
+		<!-- JUnit 5 + Mockito — test scope only, not included in production JAR -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- ══════════════════════════════════════════════════ -->
+		<!--   FUTURE PHASES — uncomment when you get there    -->
+		<!-- ══════════════════════════════════════════════════ -->
+
+		<!-- Phase 3: Spring Security + JWT RS256 -->
+		<!--
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		-->
+
+		<!-- Phase 3: Google OAuth2 -->
+		<!--
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		-->
+
+		<!-- Phase 5: Redis caching + Bucket4j rate limiting -->
+		<!--
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-redis</artifactId>
+			<version>8.10.1</version>
+		</dependency>
+		-->
+
+		<!-- Phase 7: Kafka event streaming -->
+		<!--
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		-->
+
+		<!-- Phase 6: AWS S3 for content storage -->
+		<!--
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.28.0</version>
+		</dependency>
+		-->
+
+		<!-- Phase 12: Testcontainers for integration tests -->
+		<!--
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+		-->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!--
+				Maven Compiler Plugin — Lombok MUST come before MapStruct.
+				MapStruct generates mapping code from Lombok-generated getters/setters.
+				If MapStruct runs first, it can't find the getters and compilation fails.
+				Order inside annotationProcessorPaths matters.
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

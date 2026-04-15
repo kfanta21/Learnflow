@@ -1,0 +1,15 @@
+# Default: both must review all code
+*                                    @kfanta21 @AhaduTeddy
+
+# Auth is kfanta21's sole domain
+/backend/src/**/security/            @kfanta21
+/backend/src/**/config/Security*     @kfanta21
+/backend/src/**/config/Jwt*          @kfanta21
+
+# CI/CD and infrastructure: kfanta21 owns
+/.github/workflows/                  @kfanta21
+/docker-compose*.yml                 @kfanta21
+
+# Core API business logic: AhaduTeddy owns
+/backend/src/**/service/             @AhaduTeddy
+/backend/src/**/controller/          @AhaduTeddy
